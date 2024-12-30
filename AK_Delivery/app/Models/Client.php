@@ -13,9 +13,9 @@ class Client extends Authenticatable
     use HasFactory, Notifiable, HasApiTokens;
     protected $fillable = [
         'name',
-        'code_number',
         'phone_number',
         'password',
+        'email',
         'profile_photo_path',
         'address_id',
     ];
@@ -23,6 +23,9 @@ class Client extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'code_number'
     ];
+
+    public function address(){
+        return $this->belongsTo(Address::class);
+    }
 }

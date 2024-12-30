@@ -12,8 +12,10 @@ class Address extends Model
         'display_name',
         'state',
         'city',
-        'town',
-        'suburb',
         'road',
     ];
+
+    public function client(){
+        return $this->hasOne(Client::class);
+    }
 }

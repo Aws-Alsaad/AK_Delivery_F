@@ -1,87 +1,73 @@
 <?php
 
-namespace App\Http\Controllers\client_controller;
+namespace App\Http\Controllers\admin_controller;
 
 use App\Http\Controllers\Controller;
-use App\Mail\client_mail\ForgotPasswordMail;
-use App\Models\Client;
+use App\Mail\admin_mail\ForgotPasswordMail2;
 use App\Models\FogrotPassword;
-use App\Notifications\client_notification\RegisterNotification;
+use App\Models\User;
 use App\ProjectTraits;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Nette\Utils\Random;
 
-class AuthController extends Controller
+class AuthController2 extends Controller
 {
     use ProjectTraits;
+
     public function register(Request $request){
         $validate=Validator::make($request->all(),[
-            'first_name'=>'required',
-            'last_name'=>'required',
-            'phone_number'=>'required|min:10|max:10',
+            'name'=>'required',
+            'email'=>'required|email|unique:users',
             'password'=>'required|string|min:6',
-            'email'=>'required|email|unique:clients',
         ]);
         if($validate->fails()){
             return $this->apiResponse($validate->errors(),null,400);
         }
-        $client=Client::create([
-            'name'=>request('first_name') . ' ' . request('last_name'),
-            'phone_number'=>request('phone_number'),
-            'password'=>Hash::make(request('password')),
+        $admin=User::create([
+            'name'=>request('name'),
             'email'=>request('email'),
+            'password'=>Hash::make(request('password')),
         ]);
-        $local_path='D:\Programming_languages_2025\images\client\images.png';
-        $fileContents = file_get_contents($local_path);
-        $filename=basename($local_path);
-        $path = Storage::disk('public2')->putFileAs('default_profilePhoto2' , new \Illuminate\Http\File($local_path), $filename);
-        $client->profile_photo_path = Storage::path($path);
-        $client->save();
-        $token=$client->createToken($client->name);
-        Notification::send($client,new RegisterNotification());
-        return response()->json(['message'=>'ok','data'=>$client,'token'=>$token->plainTextToken,'status'=>200]);
+        $token=$admin->createToken($request->name);
+        return response()->json(['message'=>'ok','data'=>$admin,'token'=>$token->plainTextToken,'status'=>200]);
     }
     public function login(Request $request){
         $validate=Validator::make($request->all(),[
-            'phone_number'=>'required|min:10|max:10',
+            'email'=>'required|email|exists:users',
             'password'=>'required|string|min:6',
         ]);
         if($validate->fails()){
             return $this->apiResponse($validate->errors(),null,400);
         }
-        $client=Client::where('phone_number',$request->phone_number)->first();
-        if(!$client || !Hash::check($request->password,$client->password)){
-            return $this->apiResponse('the client profile is not found or the password is not correct',null,400);
+        $admin=User::where('email',$request->email)->first();
+        if(!$admin || !Hash::check($request->password,$admin->password)){
+            return $this->apiResponse('the admin profile is not found or the password is not correct',null,400);
         }
-        $token=$client->createToken($client->name);
-        return response()->json(['message'=>'ok','data'=>$client,'token'=>$token->plainTextToken,'status'=>200]);
+        $token=$admin->createToken($admin->name);
+        return response()->json(['message'=>'ok','data'=>$admin,'token'=>$token->plainTextToken,'status'=>200]);
     }
     public function logout(Request $request){
         $request->user()->tokens()->delete();
-        return $this->apiResponse('the student profile is successfully logged out',null,200);
+        return $this->apiResponse('the admin profile is successfully logged out',null,200);
     }
     public function forgotPassword1(Request $request){
         $vaildate=Validator::make($request->all(),[
-            'email'=>'required|email|exists:clients',
+            'email'=>'required|email|exists:users',
         ]);
         if($vaildate->fails()){
             return $this->apiResponse($vaildate->errors(),null,400);
         }
-        $client=Client::where('email',$request->email)->first();
-        if(!$client){
+        $admin=User::where('email',$request->email)->first();
+        if(!$admin){
             return $this->apiResponse('you are email is not correct',null,404);
         }
         $code=$this->makeRandom();
-        $for=FogrotPassword::where('email',$client->email)->first();
+        $for=FogrotPassword::where('email',$admin->email)->first();
         if(!$for){
             FogrotPassword::create([
-                'email'=>$client->email,
+                'email'=>$admin->email,
                 'code'=>$code,
             ]);
         }
@@ -90,12 +76,12 @@ class AuthController extends Controller
                 'code'=>$code,
             ]);
         }
-        Mail::to($client->email)->send(new ForgotPasswordMail($code));
+        Mail::to($admin->email)->send(new ForgotPasswordMail2($code));
         return $this->apiResponse('email sent',null,200);
     }
     public function forgotPassword2(Request $request){
         $vaildate=Validator::make($request->all(),[
-           'code'=>'required|string|min:10|max:10',
+            'code'=>'required|string|min:10|max:10',
         ]);
         if($vaildate->fails()){
             return $this->apiResponse($vaildate->errors(),null,400);
@@ -104,12 +90,12 @@ class AuthController extends Controller
         if(!$for){
             return $this->apiResponse('your code is not correct',null,404);
         }
-        $client=Client::where('email',$for->email)->first();
+        $client=User::where('email',$for->email)->first();
         $token=$client->createToken($client->name);
         return response()->json(['message'=>'ok','data'=>$client,'token'=>$token->plainTextToken],200);
     }
     public function passwordChange(Request $request){
-        if($this->getClientId()==null){
+        if($this->getAdminId()==null){
             return $this->apiResponse('not authenticated',null,401);
         }
         $validate=Validator::make($request->all(),[
@@ -119,10 +105,10 @@ class AuthController extends Controller
         if($validate->fails()){
             return $this->apiResponse($validate->errors(),null,400);
         }
-        $client=Client::where('id',$this->getClientId())->first();
-        $client->update([
+        $admin=User::where('id',$this->getAdminId())->first();
+        $admin->update([
             'password'=>Hash::make($request->new_password),
         ]);
-        return $this->apiResponse('ok',$client,200);
+        return $this->apiResponse('ok',$admin,200);
     }
 }

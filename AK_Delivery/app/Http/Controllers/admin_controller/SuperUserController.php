@@ -5,7 +5,7 @@ namespace App\Http\Controllers\admin_controller;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class AuthController extends Controller
+class SuperUserController extends Controller
 {
-    //
+
 }
