@@ -123,6 +123,9 @@ class AuthController extends Controller
         $client->update([
             'password'=>Hash::make($request->new_password),
         ]);
+
+        $for=FogrotPassword::where('email',$client->email)->first();
+        $for->delete();
         return $this->apiResponse('ok',$client,200);
     }
 }
