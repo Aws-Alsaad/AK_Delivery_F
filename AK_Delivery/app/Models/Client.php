@@ -28,4 +28,8 @@ class Client extends Authenticatable
     public function address(){
         return $this->belongsTo(Address::class);
     }
+
+    public function orders(){
+        return $this->hasMany(Order::class);
+    }
 }

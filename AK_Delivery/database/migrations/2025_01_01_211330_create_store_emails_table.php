@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('phone_numbers', function (Blueprint $table) {
+        Schema::create('store_emails', function (Blueprint $table) {
             $table->id();
             $table->foreignId('store_id')->references('id')->on('stores')->cascadeOnDelete();
-            $table->enum('type', ['store_number', 'complaints']);
-            $table->string('phone_number');
+            $table->enum('type', ['gmail', 'telegram', 'facebook', 'instagram']);
+            $table->string('email')->unique();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('phone_numbers');
+        Schema::dropIfExists('store_emails');
     }
 };

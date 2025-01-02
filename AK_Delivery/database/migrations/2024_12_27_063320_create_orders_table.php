@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->references('id')->on('clients')->cascadeOnDelete();
             $table->foreignId('address_id')->references('id')->on('addresses')->cascadeOnDelete();
-            $table->string('phone_number');
+            $table->string('phone_number')->nullable();
             $table->integer('products_price')->default(0);
-            $table->integer('total_price')->default(0);
+            $table->integer('total_price')->default(10000);
+            $table->enum('status', ['uncancelled','sending','cancelled'])->default('uncancelled');
             $table->timestamps();
         });
     }

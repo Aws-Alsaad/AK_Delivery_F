@@ -22,7 +22,6 @@ class AddressFactory extends Factory
             'display_name'=>fake()->name,
             'state'=>fake()->country,
             'city'=>fake()->city,
-            'road'=>fake()->streetAddress,
         ];
     }
 }

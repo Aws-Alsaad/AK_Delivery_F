@@ -16,7 +16,6 @@ class Address extends Model
         'display_name',
         'state',
         'city',
-        'road',
     ];
 
     public function client(){
@@ -25,5 +24,8 @@ class Address extends Model
 
     public function store(){
         return $this->hasOne(Store::class);
+    }
+    public function orders(){
+        return $this->hasMany(Order::class);
     }
 }

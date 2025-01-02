@@ -21,6 +21,6 @@ class Product extends Model
     ];
 
     public function store(){
-        $this->belongsTo(Store::class);
+        return $this->belongsTo(Store::class);
     }
 }

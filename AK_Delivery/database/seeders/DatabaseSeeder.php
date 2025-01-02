@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\PhoneNumber;
 use App\Models\Product;
 use App\Models\Store;
+use App\Models\StoreEmail;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -27,8 +28,9 @@ class DatabaseSeeder extends Seeder
 
         Address::factory(10)->create();
         Client::factory(10)->create();
-        Store::factory(10)->create();
-        Product::factory(10)->create();
-        PhoneNumber::factory(10)->create();
+        Store::factory(20)->create();
+        Product::factory(30)->create();
+        PhoneNumber::factory(30)->create();
+        StoreEmail::factory(30)->create();
     }
 }

@@ -64,7 +64,6 @@ class ProfileController extends Controller
             'display_name'=>'required',
             'state'=>'required',
             'city'=>'required',
-            'road'=>'required',
         ]);
         if($validate->fails()){
             return $this->apiResponse($validate->errors(),null,400);
@@ -75,7 +74,6 @@ class ProfileController extends Controller
             'display_name'=>request('display_name'),
             'state'=>request('state'),
             'city'=>request('city'),
-            'road'=>request('road'),
         ]);
         $client=Client::where('id',$this->getClientId())->first();
         $client->update([

@@ -25,4 +25,8 @@ class Store extends Model
     public function phoneNumbers(){
         return $this->hasMany(PhoneNumber::class);
     }
+
+    public function storeEmails(){
+        return $this->hasMany(StoreEmail::class);
+    }
 }

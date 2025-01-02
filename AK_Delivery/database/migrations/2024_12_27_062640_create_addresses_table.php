@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('display_name');
             $table->string('state');
             $table->string('city');
-            $table->string('road');
             $table->timestamps();
         });
     }

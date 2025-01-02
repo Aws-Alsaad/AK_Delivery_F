@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PhoneNumber>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\StoreEmail>
  */
-class PhoneNumberFactory extends Factory
+class StoreEmailFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,9 +18,8 @@ class PhoneNumberFactory extends Factory
     {
         return [
             'store_id'=>fake()->numberBetween(1,20),
-            'type'=>fake()->randomElement(['store_number','complaints']),
-            'phone_number'=>fake()->phoneNumber,
+            'type'=>fake()->randomElement(['gmail', 'telegram', 'facebook', 'instagram']),
+            'email'=>fake()->email(),
         ];
     }
-
 }

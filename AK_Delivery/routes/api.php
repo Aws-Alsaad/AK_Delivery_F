@@ -3,6 +3,8 @@
 use App\Http\Controllers\admin_controller\AuthController2;
 use App\Http\Controllers\admin_controller\ProfileController2;
 use App\Http\Controllers\client_controller\AuthController;
+use App\Http\Controllers\client_controller\OrderController;
+use App\Http\Controllers\client_controller\OrderProductsController;
 use App\Http\Controllers\client_controller\ProfileController;
 use App\Http\Controllers\client_controller\StoreController;
 use Illuminate\Http\Request;
@@ -32,6 +34,27 @@ Route::group(['prefix' => 'client'], function () {
 
         Route::get('getStores',[StoreController::class,'getStores']);
         Route::get('getStore',[StoreController::class,'getStore']);
+        Route::get('storeSearch',[StoreController::class,'storeSearch']);
+        Route::get('getProducts',[StoreController::class,'getProducts']);
+        Route::get('getProduct',[StoreController::class,'getProduct']);
+        Route::get('productSearch1',[StoreController::class,'productSearch1']);
+        Route::get('productSearch2',[StoreController::class,'productSearch2']);
+
+        Route::post('addOrder',[OrderController::class,'addOrder']);
+        Route::post('phoneNumberOrder',[OrderController::class,'phoneNumberOrder']);
+        Route::post('changeAddressOrder',[OrderController::class,'changeAddressOrder']);
+        Route::post('changePhoneNumberOrder',[OrderController::class,'changePhoneNumberOrder']);
+        Route::post('deleteOrder',[OrderController::class,'deleteOrder']);
+        Route::get('getOrder1',[OrderController::class,'getOrder1']);
+        Route::get('getOrder2',[OrderController::class,'getOrder2']);
+        Route::get('getOrders',[OrderController::class,'getOrders']);
+        Route::post('sendOrder',[OrderController::class,'sendOrder']);
+
+        Route::post('addProductsOrder',[OrderProductsController::class,'addProductsOrder']);
+        Route::post('changeQuantity',[OrderProductsController::class,'changeQuantity']);
+        Route::post('deleteOrderProduct',[OrderProductsController::class,'deleteOrderProduct']);
+        Route::get('getOrderProducts1',[OrderProductsController::class,'getOrderProducts1']);
+        Route::get('getOrderProducts2',[OrderProductsController::class,'getOrderProducts2']);
 
         Route::post('logout',[AuthController::class,'logout']);
     });
