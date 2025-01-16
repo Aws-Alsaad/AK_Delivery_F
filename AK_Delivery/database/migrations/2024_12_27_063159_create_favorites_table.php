@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->references('id')->on('clients')->cascadeOnDelete();
             $table->foreignId('product_id')->references('id')->on('products')->cascadeOnDelete();
+            $table->foreignId('store_id')->references('id')->on('stores')->cascadeOnDelete();
             $table->timestamps();
         });
     }

@@ -11,16 +11,19 @@ class SendOrderNotification extends Notification
 {
     use Queueable;
 
+    private $order_number;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($oder_number)
     {
-        //
+        $this->order_number = $oder_number;
     }
 
 
-    public $text4="the order send to you";
+    private $text='the order that number :';
+    private $text2='is send to you';
 
     /**
      * Get the notification's delivery channels.
@@ -51,7 +54,7 @@ class SendOrderNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            $text = $this->text4,
+            'text'=>$this->text . ' ' . $this->order_number . ' ' . $this->text2,
         ];
     }
 }

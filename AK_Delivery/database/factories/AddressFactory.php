@@ -17,11 +17,13 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'lat'=>fake()->address,
-            'lon'=>fake()->address,
-            'display_name'=>fake()->name,
             'state'=>fake()->country,
             'city'=>fake()->city,
+            'town'=>fake()->city,
+            'area'=>fake()->city,
+            'street'=>fake()->streetAddress,
+            'notes'=>fake()->text,
+            'display_name'=>fake()->name,
         ];
     }
 }

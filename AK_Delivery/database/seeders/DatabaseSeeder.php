@@ -4,10 +4,13 @@ namespace Database\Seeders;
 
 use App\Models\Address;
 use App\Models\Client;
+use App\Models\ClientCs;
 use App\Models\PhoneNumber;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\StoreEmail;
+use App\Models\SuperClient;
+use App\Models\SuperClientCs;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -32,5 +35,8 @@ class DatabaseSeeder extends Seeder
         Product::factory(30)->create();
         PhoneNumber::factory(30)->create();
         StoreEmail::factory(30)->create();
+        ClientCs::factory(20)->create();
+        SuperClient::factory(10)->create();
+        SuperClientCs::factory(20)->create();
     }
 }

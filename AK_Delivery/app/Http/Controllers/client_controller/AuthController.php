@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\client_mail\ForgotPasswordMail;
 use App\Models\Client;
 use App\Models\FogrotPassword;
+use App\Notifications\ChangePasswordNotification;
 use App\Notifications\client_notification\RegisterNotification;
 use App\ProjectTraits;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class AuthController extends Controller
         $validate=Validator::make($request->all(),[
             'first_name'=>'required',
             'last_name'=>'required',
-            'phone_number'=>'required|regex:/^09[0-9]{8}$/|min:10|max:10',
+            'phone_number'=>'required|regex:/^09[0-9]{8}$/|min:10|max:10|unique:clients',
             'password'=>'required|string|min:6',
             'email'=>'required|email|unique:clients',
         ]);
@@ -41,7 +42,10 @@ class AuthController extends Controller
         $fileContents = file_get_contents($local_path);
         $filename=basename($local_path);
         $path = Storage::disk('public2')->putFileAs('default_profilePhoto2' , new \Illuminate\Http\File($local_path), $filename);
-        $client->profile_photo_path = Storage::path($path);
+        $sh='\\';
+        $fullPath=str_replace('/',$sh,public_path("app\public\\".$path),);
+        $fullPath2=str_replace('\\\\',$sh,$fullPath);
+        $client->profile_photo_path = $fullPath2;
         $client->save();
         $token=$client->createToken($client->name);
         Notification::send($client,new RegisterNotification());
@@ -49,7 +53,7 @@ class AuthController extends Controller
     }
     public function login(Request $request){
         $validate=Validator::make($request->all(),[
-            'phone_number'=>'required|regex:/^09[0-9]{8}$/|min:10|max:10|unique:clients',
+            'phone_number'=>'required|regex:/^09[0-9]{8}$/|min:10|max:10|exists:clients',
             'password'=>'required|string|min:6',
         ]);
         if($validate->fails()){
@@ -75,7 +79,7 @@ class AuthController extends Controller
         }
         $client=Client::where('email',$request->email)->first();
         if(!$client){
-            return $this->apiResponse('you are email is not correct',null,404);
+            return $this->apiResponse('your email is not correct',null,404);
         }
         $code=$this->makeRandom();
         $for=FogrotPassword::where('email',$client->email)->first();
@@ -126,6 +130,7 @@ class AuthController extends Controller
 
         $for=FogrotPassword::where('email',$client->email)->first();
         $for->delete();
+        Notification::send($client,new ChangePasswordNotification());
         return $this->apiResponse('ok',$client,200);
     }
 }

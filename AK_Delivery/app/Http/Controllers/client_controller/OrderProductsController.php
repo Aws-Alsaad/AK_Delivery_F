@@ -51,7 +51,6 @@ class OrderProductsController extends Controller
         $order_product2=OrderProduct::where('id',$order_product->id)->with('order')->get();
         return $this->apiResponse('order added successfully',$order_product2,200);
     }
-
     public function changeQuantity(Request $request){
         if($this->getClientId()==null){
             return $this->apiResponse('not authenticated',null,401);

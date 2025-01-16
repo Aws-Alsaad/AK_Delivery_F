@@ -19,9 +19,9 @@ class RegisterNotification extends Notification
         //
     }
 
-    protected $text1="The account has been created successfully";
-    protected $text2="please add your address if you want";
-    protected $text3="please add your profile photo path if you want";
+    private $text="The account has been created successfully";
+    private $text2="please add your address if you want";
+    private $text3="please add your profile photo path if you want";
 
     /**
      * Get the notification's delivery channels.
@@ -52,7 +52,7 @@ class RegisterNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'text1'=>$this->text1,
+            'text1'=>$this->text,
             'text2'=>$this->text2,
             'text3'=>$this->text3,
         ];

@@ -28,8 +28,11 @@ class Client extends Authenticatable
     public function address(){
         return $this->belongsTo(Address::class);
     }
-
     public function orders(){
         return $this->hasMany(Order::class);
     }
+    public function clientCS(){
+        return $this->hasMany(ClientCS::class);
+    }
+
 }

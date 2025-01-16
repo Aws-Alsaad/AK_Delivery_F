@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Notifications\super_client;
+namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RegisterNotification extends Notification
+class ChangePasswordNotification extends Notification
 {
     use Queueable;
 
@@ -19,8 +19,7 @@ class RegisterNotification extends Notification
         //
     }
 
-    protected $text1="The account has been created successfully";
-    protected $text2="please add your address if you want and profile photo";
+    public $text6="your password is changed ";
 
     /**
      * Get the notification's delivery channels.
@@ -35,13 +34,13 @@ class RegisterNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
-    {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
-    }
+//    public function toMail(object $notifiable): MailMessage
+//    {
+//        return (new MailMessage)
+//                    ->line('The introduction to the notification.')
+//                    ->action('Notification Action', url('/'))
+//                    ->line('Thank you for using our application!');
+//    }
 
     /**
      * Get the array representation of the notification.
@@ -51,7 +50,7 @@ class RegisterNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'text6' => $this->text6,
         ];
     }
 }

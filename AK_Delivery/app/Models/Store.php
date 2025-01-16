@@ -25,8 +25,14 @@ class Store extends Model
     public function phoneNumbers(){
         return $this->hasMany(PhoneNumber::class);
     }
-
     public function storeEmails(){
         return $this->hasMany(StoreEmail::class);
+    }
+    public function Favorites(){
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function superClient(){
+        return $this->hasOne(SuperClient::class);
     }
 }

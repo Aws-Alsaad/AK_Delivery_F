@@ -5,6 +5,11 @@ namespace App\Http\Controllers\client_controller;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\Client;
+use App\Notifications\AddAddressNotification;
+use App\Notifications\AddProfilePhoto;
+use App\Notifications\ChangeAddressNotification;
+use App\Notifications\changeNameNotification;
+use App\Notifications\ChangePasswordNotification;
 use App\ProjectTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +40,7 @@ class ProfileController extends Controller
         $client->update([
             'password'=>Hash::make($request->new_password),
         ]);
+        Notification::send($client,new ChangePasswordNotification());
         return $this->apiResponse('ok',$client,200);
     }
     public function addProfilePhoto(Request $request){
@@ -50,8 +56,9 @@ class ProfileController extends Controller
         $path=$this->uploadFiles($request,'client_profilePhotos');
         $client=Client::where('id',$this->getClientId())->first();
         $client->update([
-            'profile_photo_path'=>Storage::path($path)
+            'profile_photo_path'=>$path
         ]);
+        Notification::send($client,new AddProfilePhoto());
         return $this->apiResponse('ok',$client->profile_photo_path,200);
     }
     public function addAddress(Request $request){
@@ -59,27 +66,64 @@ class ProfileController extends Controller
             return $this->apiResponse('not authenticated',null,401);
         }
         $validate=Validator::make($request->all(),[
-            'lat'=>'required',
-            'lon'=>'required',
-            'display_name'=>'required',
             'state'=>'required',
             'city'=>'required',
+            'area'=>'required',
+            'street'=>'required'
         ]);
         if($validate->fails()){
             return $this->apiResponse($validate->errors(),null,400);
         }
         $address=Address::create([
-            'lat'=>request('lat'),
-            'lon'=>request('lon'),
-            'display_name'=>request('display_name'),
             'state'=>request('state'),
             'city'=>request('city'),
+            'town'=>request('town'),
+            'area'=>request('area'),
+            'street'=>request('street'),
+            'notes'=>request('notes'),
+            'display_name'=>request('state') . ' , ' . request('town') . ' , ' . request('town') . ' , ' .
+                request('area') . ' , ' . request('street') . ' , ' . request('notes'),
         ]);
         $client=Client::where('id',$this->getClientId())->first();
         $client->update([
             'address_id'=>$address->id
         ]);
         $client_address=Client::where('id',$client->id)->with('address')->first();
+        Notification::send($client,new AddAddressNotification());
+        return $this->apiResponse('ok',$client_address,200);
+    }
+    public function changeAddress(Request $request){
+        if($this->getClientId()==null){
+            return $this->apiResponse('not authenticated',null,401);
+        }
+        $validate=Validator::make($request->all(),[
+            'state'=>'required',
+            'city'=>'required',
+            'area'=>'required',
+            'street'=>'required'
+        ]);
+        if($validate->fails()){
+            return $this->apiResponse($validate->errors(),null,400);
+        }
+        $client=Client::where('id',$this->getClientId())->first();
+        $address=Address::where('id',$client->address_id)->first();
+        $address->update([
+            'state'=>request('state'),
+            'city'=>request('city'),
+            'town'=>request('town'),
+            'area'=>request('area'),
+            'street'=>request('street'),
+            'notes'=>request('notes'),
+            'display_name'=>request('state') . ' , ' . request('town') . ' , ' . request('town') . ' , ' .
+                request('area') . ' , ' . request('street') . ' , ' . request('notes'),
+
+        ]);
+        $client=Client::where('id',$this->getClientId())->first();
+        $client->update([
+            'address_id'=>$address->id
+        ]);
+        $client_address=Client::where('id',$client->id)->with('address')->first();
+        Notification::send($client,new ChangeAddressNotification());
         return $this->apiResponse('ok',$client_address,200);
     }
     public function nameChanging(Request $request){
@@ -96,6 +140,7 @@ class ProfileController extends Controller
         $client->update([
             'name'=>$request->new_name
         ]);
+        Notification::send($client,new ChangeNameNotification());
         return $this->apiResponse('ok',$client,200);
     }
     public function deleteAccount(){

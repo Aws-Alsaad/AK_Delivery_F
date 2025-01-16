@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('super_clients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_id')->references('id')->on('stores')->cascadeOnDelete();
+            $table->foreignId('store_id')->nullable()->references('id')->on('stores')->cascadeOnDelete();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');

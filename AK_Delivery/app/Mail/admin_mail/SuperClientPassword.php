@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail\super_client_mail;
+namespace App\Mail\admin_mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,16 +9,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RegisterMail extends Mailable
+class SuperClientPassword extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+
+    public $code2;
+    public function __construct($code2)
     {
-        //
+        $this->code2 = $code2;
     }
 
     /**
@@ -27,7 +29,7 @@ class RegisterMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Register Mail',
+            subject: 'Super Client Password',
         );
     }
 
@@ -37,7 +39,7 @@ class RegisterMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'SuperClientPassword',
         );
     }
 

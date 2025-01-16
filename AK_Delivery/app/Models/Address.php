@@ -11,11 +11,13 @@ class Address extends Model
     use HasFactory;
 
     protected $fillable=[
-        'lat',
-        'lon',
-        'display_name',
         'state',
         'city',
+        'town',
+        'area',
+        'street',
+        'notes',
+        'display_name',
     ];
 
     public function client(){
@@ -26,6 +28,6 @@ class Address extends Model
         return $this->hasOne(Store::class);
     }
     public function orders(){
-        return $this->hasMany(Order::class);
+        return $this->hasOne(Order::class);
     }
 }

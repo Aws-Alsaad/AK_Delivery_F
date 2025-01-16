@@ -18,8 +18,8 @@ class StoreEmailFactory extends Factory
     {
         return [
             'store_id'=>fake()->numberBetween(1,20),
-            'type'=>fake()->randomElement(['gmail', 'telegram', 'facebook', 'instagram']),
-            'email'=>fake()->email(),
+            'type'=>fake()->randomElement(['gmail', 'telegram', 'facebook', 'instagram','whatsapp']),
+            'link'=>fake()->email(),
         ];
     }
 }

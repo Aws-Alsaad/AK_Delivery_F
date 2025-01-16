@@ -29,7 +29,7 @@ class StoreController extends Controller
         if($validator->fails()){
             return $this->apiResponse('error',$validator->errors(),400);
         }
-        $store=Store::where('id',$request->id)->with('storeEmails')->with('phoneNumbers')->first();
+        $store=Store::where('id',$request->id)->with('address')->with('storeEmails')->with('phoneNumbers')->get();
         return $this->apiResponse('ok',$store,200);
     }
     public function storeSearch(Request $request){

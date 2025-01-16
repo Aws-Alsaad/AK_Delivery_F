@@ -27,21 +27,24 @@ class OrderController extends Controller
             return $this->apiResponse('order already exist',null,400);
         }
         $validate=Validator::make($request->all(),[
-            'lat'=>'required',
-            'lon'=>'required',
-            'display_name'=>'required',
             'state'=>'required',
             'city'=>'required',
+            'area'=>'required',
+            'street'=>'required'
         ]);
         if($validate->fails()){
             return $this->apiResponse($validate->errors(),null,400);
         }
         $address=Address::create([
-            'lat'=>request('lat'),
-            'lon'=>request('lon'),
-            'display_name'=>request('display_name'),
             'state'=>request('state'),
             'city'=>request('city'),
+            'town'=>request('town'),
+            'area'=>request('area'),
+            'street'=>request('street'),
+            'notes'=>request('notes'),
+            'display_name'=>request('state') . ' , ' . request('town') . ' , ' . request('town') . ' , ' .
+            request('area') . ' , ' . request('street') . ' , ' . request('notes'),
+
         ]);
         $order2=Order::create([
             'client_id'=>$this->getClientId(),
@@ -73,11 +76,10 @@ class OrderController extends Controller
             return $this->apiResponse('not authenticated',null,401);
         }
         $validate=Validator::make($request->all(),[
-            'lat'=>'required',
-            'lon'=>'required',
-            'display_name'=>'required',
             'state'=>'required',
             'city'=>'required',
+            'area'=>'required',
+            'street'=>'required'
         ]);
         if($validate->fails()){
             return $this->apiResponse($validate->errors(),null,400);
@@ -85,11 +87,15 @@ class OrderController extends Controller
         $order=Order::where('client_id',$this->getClientId())->where('status','uncancelled')->first();
         $address=Address::where('id',$order->address_id)->first();
         $address->update([
-            'lat'=>request('lat'),
-            'lon'=>request('lon'),
-            'display_name'=>request('display_name'),
+
             'state'=>request('state'),
             'city'=>request('city'),
+            'town'=>request('town'),
+            'area'=>request('area'),
+            'street'=>request('street'),
+            'notes'=>request('notes'),
+            'display_name'=>request('state') . ' , ' . request('town') . ' , ' . request('town') . ' , ' .
+                request('area') . ' , ' . request('street') . ' , ' . request('notes'),
         ]);
         $order2=Order::where('id',$order->id)->with('orderProducts')->with('address')->get();
         return $this->apiResponse('address order changed successfully',$order2,200);
@@ -162,16 +168,17 @@ class OrderController extends Controller
             return $this->apiResponse($validate->errors(),null,400);
         }
         $order=Order::where('id',$request->id)->first();
-        $products_price=$order->product_price;
+        $products_price=$order->products_price;
         $total_price=$order->total_price;
         $order->update([
-            'total'=>$total_price+$products_price,
+            'total_price'=>$total_price+$products_price,
             'status'=>'sending',
         ]);
-        $order2=Order::where('id',$order->id)->with('orderProducts')->with('client')->get();
+        $order2=Order::where('id',$order->id)->with('orderProducts')->with('client')->first();
         $client=Client::where('id',$this->getClientId())->first();
-        Notification::send($client,new SendOrderNotification());
-        return $this->apiResponse('order sending',$order2,200);
+        $order_number=$order2->id;
+        Notification::send($client,new SendOrderNotification($order_number));
+        return $this->apiResponse('order sending',$order,200);
     }
 
 }

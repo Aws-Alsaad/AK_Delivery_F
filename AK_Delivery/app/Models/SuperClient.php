@@ -24,4 +24,11 @@ class SuperClient extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function store(){
+        return $this->belongsTo(Store::class);
+    }
+    public function superClientCS(){
+        return $this->hasMany(SuperClientCS::class);
+    }
 }

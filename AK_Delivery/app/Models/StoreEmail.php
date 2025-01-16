@@ -12,7 +12,7 @@ class StoreEmail extends Model
     protected $fillable=[
         'store_id',
         'type',
-        'email',
+        'link',
     ];
 
     public function store(){

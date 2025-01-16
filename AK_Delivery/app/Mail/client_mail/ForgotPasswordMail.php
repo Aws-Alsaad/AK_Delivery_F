@@ -12,19 +12,17 @@ use Illuminate\Queue\SerializesModels;
 class ForgotPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $code;
+    public $code3;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($code)
+    public function __construct($code3)
     {
-        $this->code = $code;
+        $this->code3 = $code3;
     }
 
-    public function getCode(): string{
-        return $this->code;
-    }
+
 
     /**
      * Get the message envelope.

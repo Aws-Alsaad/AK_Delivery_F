@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('store_emails', function (Blueprint $table) {
             $table->id();
             $table->foreignId('store_id')->references('id')->on('stores')->cascadeOnDelete();
-            $table->enum('type', ['gmail', 'telegram', 'facebook', 'instagram']);
-            $table->string('email')->unique();
+            $table->enum('type', ['gmail', 'telegram', 'facebook', 'instagram','whatsapp']);
+            $table->string('link');
             $table->timestamps();
         });
     }
